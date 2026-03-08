@@ -4,10 +4,11 @@ import { getStockDetail } from "@/backend/ticker";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { ticker: string } }
+  { params }: { params: Promise<{ ticker: string }> }
 ) {
   try {
-    const data = await getStockDetail(params.ticker);
+    const { ticker } = await params;
+    const data = await getStockDetail(ticker);
     return NextResponse.json(data);
   } catch (err) {
     console.error("[ticker] failed to load:", err);

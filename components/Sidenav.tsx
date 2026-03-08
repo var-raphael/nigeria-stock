@@ -4,6 +4,7 @@ import {
   HiOutlineViewGrid,
   HiOutlineChartBar,
   HiOutlineBriefcase,
+  HiOutlineBookmark,
   HiOutlineCog,
   HiOutlineX,
 } from "react-icons/hi";
@@ -13,6 +14,7 @@ const NAV = [
   { icon: HiOutlineViewGrid,  label: "Dashboard", href: "/dashboard" },
   { icon: HiOutlineChartBar,  label: "Stocks",    href: "/stocks"    },
   { icon: HiOutlineBriefcase, label: "Portfolio", href: "/portfolio" },
+  { icon: HiOutlineBookmark,  label: "Watchlist", href: "/watchlist" },
   { icon: HiOutlineCog,       label: "Settings",  href: "/settings"  },
 ];
 
@@ -41,7 +43,6 @@ export default function Sidenav({ active, isOpen, onClose }: SidenavProps) {
           display: flex; flex-direction: column;
           background: ${surface};
           border-right: 1px solid ${border};
-          /* Animate opacity+transform instead of width to avoid overflow issues */
           width: 240px;
           transform: translateX(0);
           transition: transform .3s cubic-bezier(.16,1,.3,1), opacity .3s ease;
@@ -75,7 +76,6 @@ export default function Sidenav({ active, isOpen, onClose }: SidenavProps) {
           font-size: 1.1rem; font-weight: 800;
           color: ${text};
           letter-spacing: -.02em; line-height: 1;
-          /* Let text truncate if somehow too tight */
           overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
         .snav-wordmark span { color: ${blue}; }

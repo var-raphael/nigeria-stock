@@ -1,12 +1,11 @@
 // app/api/compare/route.ts
 //
-// Usage: GET /api/compare?a=MTNN&b=DANGCEM
-// Returns: { stockA: StockDetail, stockB: StockDetail, symbols: string[] }
-//
-// `symbols` is the full list of available tickers for the picker dropdown.
+// GET /api/compare               → symbols list + full stockMap (for picker)
+// GET /api/compare?a=X&b=Y       → stockA, stockB, symbols
 
 import { NextResponse } from "next/server";
 import { getStockDetail, getCompareSymbols } from "@/backend/ticker";
+import type { StockDetail } from "@/backend/ticker";
 
 export async function GET(req: Request) {
   try {
@@ -16,9 +15,14 @@ export async function GET(req: Request) {
 
     const symbols = await getCompareSymbols();
 
-    // If only symbols are needed (no a/b), return early
+    // No params — return symbols + all stock details so the picker
+    // can render names and change% immediately without a second round-trip.
     if (!a && !b) {
-      return NextResponse.json({ symbols });
+      const allStocks = await Promise.all(symbols.map((s) => getStockDetail(s)));
+      const stockMap: Record<string, StockDetail> = Object.fromEntries(
+        allStocks.map((s) => [s.symbol, s])
+      );
+      return NextResponse.json({ symbols, stockMap });
     }
 
     const [stockA, stockB] = await Promise.all([

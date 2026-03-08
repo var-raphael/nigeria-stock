@@ -355,12 +355,14 @@ export default function ComparePage() {
     return () => clearInterval(t);
   }, []);
 
-  // Load symbol list + pre-seed ?a= from URL on mount
+  // Load all stocks on mount so the picker is fully populated immediately.
+  // GET /api/compare (no params) returns { symbols, stockMap } with all stock data.
   useEffect(() => {
     fetch("/api/compare")
       .then((r) => r.json())
-      .then(({ symbols }: { symbols: string[] }) => {
+      .then(({ symbols, stockMap: map }: { symbols: string[]; stockMap: Record<string, StockDetail> }) => {
         setAllSymbols(symbols);
+        setStockMap(map);
         const params = new URLSearchParams(window.location.search);
         const a = params.get("a")?.toUpperCase();
         if (a && symbols.includes(a)) setSymA(a);
